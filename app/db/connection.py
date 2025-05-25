@@ -10,9 +10,9 @@ from sqlalchemy.ext.asyncio import (
 
 
 db_config = DBConfig()
-connection_string = db_config.connection_string
+sa_connection_string = db_config.sa_connection_string
 
-async_engine = create_async_engine(url=connection_string)
+async_engine = create_async_engine(url=sa_connection_string)
 async_session_maker = async_sessionmaker(bind=async_engine,
                                          class_=AsyncSession,
                                          expire_on_commit=False)

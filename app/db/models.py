@@ -14,7 +14,7 @@ from sqlalchemy import ForeignKey, func, text
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
 )
-from _enums import FinancialTypesEnum, FinancialGroupStatusesEnum
+from ._enums import FinancialTypesEnum, FinancialGroupStatusesEnum
 
 
 idx = Annotated[int, mapped_column(primary_key=True, index=True, autoincrement=True)]

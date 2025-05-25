@@ -6,6 +6,8 @@ class ConfigurationError(KeyError):
 
 
 class DBConfig:
+    """ env vars for database configuration. """
+
     def __init__(self):
         try:
             self.POSTGRES_USER = os.environ["POSTGRES_USER"]
@@ -18,7 +20,9 @@ class DBConfig:
             raise ConfigurationError(f"Unable to get configuration value: {ex.args[0]}.")
     
     @property
-    def connection_string(self):
+    def sa_connection_string(self):
+        """ Connection string for creating sqlalchemy engine object. """
+        
         return 'postgresql+asyncpg://{}:{}@{}:{}/{}'.format(
             self.POSTGRES_USER,
             self.POSTGRES_PASSWORD,
