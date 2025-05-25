@@ -32,6 +32,12 @@ class TransactionCategory(Base):
     id: Mapped[idx]
     name: Mapped[str] = mapped_column(unique=True)
     desription: Mapped[str | None]
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+
+    user: Mapped['User'] = relationship(
+        'User',
+        back_populates='transaction_categories'
+    )
 
 
 class FinancialGroup(Base):
@@ -46,12 +52,18 @@ class FinancialGroup(Base):
     name: Mapped[str]
     description: Mapped[str | None]
     deadline: Mapped[datetime | None]
-
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    
+    user: Mapped['User'] = relationship(
+        'User',
+        back_populates='financial_groups'
+    )
     transactions: Mapped[list['Transaction']] = relationship(
         'Transaction',
-        back_populates='bank_cards',
+        back_populates='financial_group',
         cascade='all, delete-orphan'
     )
+    
     
 """ It must be a calculating field.
 
@@ -94,9 +106,19 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
 
-    bank_card: Mapped[list['BankCard']] = relationship(
+    bank_cards: Mapped[list['BankCard']] = relationship(
         'BankCard',
-        back_populates='users',
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )
+    financial_groups: Mapped[list['FinancialGroup']] = relationship(
+        'FinancialGroup',
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )
+    transaction_categories: Mapped[list['TransactionCategory']] = relationship(
+        'TransactionCategory',
+        back_populates='user',
         cascade='all, delete-orphan'
     )
 
@@ -118,7 +140,7 @@ class BankCard(Base):
 
     transactions: Mapped[list['Transaction']] = relationship(
         'Transaction',
-        back_populates='bank_cards',
+        back_populates='bank_card',
         cascade='all, delete-orphan'
     )
 
