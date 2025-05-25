@@ -94,11 +94,10 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
 
-    bank_card: Mapped['BankCard'] = relationship(
+    bank_card: Mapped[list['BankCard']] = relationship(
         'BankCard',
         back_populates='users',
-        uselist=False,
-        lazy='selectin'
+        cascade='all, delete-orphan'
     )
 
 
