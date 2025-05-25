@@ -1,9 +1,5 @@
 # SQL models.
 
-"""
-How downgrade enums: https://stackoverflow.com/questions/25811017/how-to-delete-an-enum-type-value-in-postgres.
-"""
-
 from decimal import *
 from datetime import datetime
 from typing import Annotated
@@ -18,18 +14,7 @@ from sqlalchemy import ForeignKey, func, text
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
 )
-import enum
-
-
-class FinancialTypesEnum(enum.IntEnum):
-    GOAL = 0
-    CREDIT = 1
-    TRANSFER = 2
-
-
-class FinancialGroupStatusesEnum(enum.StrEnum):
-    OPEN = 'Open'
-    CLOSE = 'Close'
+from _enums import FinancialTypesEnum, FinancialGroupStatusesEnum
 
 
 idx = Annotated[int, mapped_column(primary_key=True, index=True, autoincrement=True)]
