@@ -13,12 +13,12 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
 from app.db.models import Base
-from app.db.connection import connection_string
+from app.db.connection import sa_connection_string
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', connection_string)
+config.set_main_option('sqlalchemy.url', sa_connection_string)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
