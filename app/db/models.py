@@ -38,6 +38,11 @@ class TransactionCategory(Base):
         'User',
         back_populates='transaction_categories'
     )
+    transactions: Mapped[list['Transaction'] | None] = relationship(
+        'Transaction',
+        back_populates='category',
+        cascade='all, delete-orphan'
+    )
 
 
 class FinancialGroup(Base):
@@ -58,7 +63,7 @@ class FinancialGroup(Base):
         'User',
         back_populates='financial_groups'
     )
-    transactions: Mapped[list['Transaction']] = relationship(
+    transactions: Mapped[list['Transaction'] | None] = relationship(
         'Transaction',
         back_populates='financial_group',
         cascade='all, delete-orphan'
@@ -82,16 +87,20 @@ class Transaction(Base):
     description: Mapped[str | None]
     target: Mapped[int | None]  # `FinancialGroup` or another card if `target_type` is not `None`.
     target_type: Mapped[FinancialTypesEnum | None]
-    category_id: Mapped[int | None] = mapped_column(ForeignKey('transaction_categories.id'))
+    category_id: Mapped[int | None] = mapped_column(ForeignKey('transaction_categories.id', ondelete='SET NULL'))
     
-    bank_card_id: Mapped[str] = mapped_column(ForeignKey('bank_cards.id'))
-    financial_group_id: Mapped[int | None] = mapped_column(ForeignKey('financial_groups.id'))
-
+    bank_card_id: Mapped[str] = mapped_column(ForeignKey('bank_cards.id', ondelete='CASCADE'))
+    financial_group_id: Mapped[int | None] = mapped_column(ForeignKey('financial_groups.id', ondelete='CASCADE'))
+    
+    category: Mapped['TransactionCategory' | None] = relationship(
+        'TransactionCategory',
+        back_populates='transactions'
+    )
     bank_card: Mapped['BankCard'] = relationship(
         'BankCard',
         back_populates='transactions'
     )
-    financial_group: Mapped['FinancialGroup'] = relationship(
+    financial_group: Mapped['FinancialGroup' | None] = relationship(
         'FinancialGroup',
         back_populates='transactions'
     )
@@ -111,12 +120,12 @@ class User(Base):
         back_populates='user',
         cascade='all, delete-orphan'
     )
-    financial_groups: Mapped[list['FinancialGroup']] = relationship(
+    financial_groups: Mapped[list['FinancialGroup'] | None] = relationship(
         'FinancialGroup',
         back_populates='user',
         cascade='all, delete-orphan'
     )
-    transaction_categories: Mapped[list['TransactionCategory']] = relationship(
+    transaction_categories: Mapped[list['TransactionCategory'] | None] = relationship(
         'TransactionCategory',
         back_populates='user',
         cascade='all, delete-orphan'
@@ -137,8 +146,7 @@ class BankCard(Base):
         'User',
         back_populates='bank_cards'
     )
-
-    transactions: Mapped[list['Transaction']] = relationship(
+    transactions: Mapped[list['Transaction'] | None] = relationship(
         'Transaction',
         back_populates='bank_card',
         cascade='all, delete-orphan'
