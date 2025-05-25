@@ -27,7 +27,6 @@ class FinancialTypesEnum(enum.IntEnum):
     TRANSFER = 2
 
 
-
 class FinancialGroupStatusesEnum(enum.StrEnum):
     OPEN = 'Open'
     CLOSE = 'Close'
@@ -57,7 +56,7 @@ class FinancialGroup(Base):
     id: Mapped[idx]
 
     status: Mapped[FinancialGroupStatusesEnum] = mapped_column(default=FinancialGroupStatusesEnum.OPEN,
-                                                               server_default=text("'CLOSE'"))
+                                                               server_default=text("'OPEN'"))
     sum: Mapped[Decimal]
     name: Mapped[str]
     description: Mapped[str | None]

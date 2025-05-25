@@ -1,4 +1,4 @@
-# Methods for database connection and interractin with models.
+# Methods for database connection and interaction with models.
 
 from .db_config import DBConfig
 
