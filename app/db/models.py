@@ -2,7 +2,7 @@
 
 from decimal import *
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Optional
 
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -92,7 +92,7 @@ class Transaction(Base):
     bank_card_id: Mapped[str] = mapped_column(ForeignKey('bank_cards.id', ondelete='CASCADE'))
     financial_group_id: Mapped[int | None] = mapped_column(ForeignKey('financial_groups.id', ondelete='CASCADE'))
     
-    category: Mapped['TransactionCategory' | None] = relationship(
+    category: Mapped[Optional['TransactionCategory']] = relationship(
         'TransactionCategory',
         back_populates='transactions'
     )
@@ -100,7 +100,7 @@ class Transaction(Base):
         'BankCard',
         back_populates='transactions'
     )
-    financial_group: Mapped['FinancialGroup' | None] = relationship(
+    financial_group: Mapped[Optional['FinancialGroup']] = relationship(
         'FinancialGroup',
         back_populates='transactions'
     )
