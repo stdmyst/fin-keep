@@ -1,5 +1,9 @@
 # SQL models.
 
+"""
+How downgrade enums: https://stackoverflow.com/questions/25811017/how-to-delete-an-enum-type-value-in-postgres.
+"""
+
 from decimal import *
 from datetime import datetime
 from typing import Annotated
@@ -17,9 +21,11 @@ from sqlalchemy.ext.asyncio import (
 import enum
 
 
-class FinancialGroupTypesEnum(enum.IntEnum):
+class FinancialTypesEnum(enum.IntEnum):
     GOAL = 0
     CREDIT = 1
+    TRANSFER = 2
+
 
 
 class FinancialGroupStatusesEnum(enum.StrEnum):
@@ -79,7 +85,7 @@ class Transaction(Base):
     trans_sum: Mapped[Decimal]
     description: Mapped[str | None]
     target: Mapped[int | None]  # `FinancialGroup` or another card if `target_type` is not `None`.
-    target_type: Mapped[FinancialGroupTypesEnum | None]
+    target_type: Mapped[FinancialTypesEnum | None]
     category_id: Mapped[int | None] = mapped_column(ForeignKey('transaction_categories.id'))
     
     bank_card_id: Mapped[str] = mapped_column(ForeignKey('bank_cards.id'))
