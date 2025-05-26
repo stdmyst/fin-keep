@@ -8,11 +8,12 @@ import enum
 
 
 class FinancialTypesEnum(enum.IntEnum):
-    GOAL = 0
-    CREDIT = 1
-    TRANSFER = 2
+    CREDIT = 0
+    GOAL = 1
+    TRANSFER = 3
 
 
-class FinancialGroupStatusesEnum(enum.StrEnum):
-    OPEN = 'Open'
-    CLOSE = 'Close'
+class FinancialGroupStatusesEnum(enum.IntEnum):
+    CLOSE = 0
+    OPEN = 1
+    

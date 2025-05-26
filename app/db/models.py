@@ -141,7 +141,7 @@ class BankCard(Base):
     card_name: Mapped[str | None]
     card_description: Mapped[str | None]
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
-
+    
     user: Mapped['User'] = relationship(
         'User',
         back_populates='bank_cards'
