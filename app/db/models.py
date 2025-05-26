@@ -115,7 +115,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
 
-    bank_cards: Mapped[list['BankCard']] = relationship(
+    bank_cards: Mapped[list['BankCard'] | None] = relationship(
         'BankCard',
         back_populates='user',
         cascade='all, delete-orphan'
