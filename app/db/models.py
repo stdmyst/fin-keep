@@ -32,7 +32,7 @@ class TransactionCategory(Base):
     id: Mapped[idx]
     name: Mapped[str] = mapped_column(unique=True)
     desription: Mapped[str | None]
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
 
     user: Mapped['User'] = relationship(
         'User',
@@ -57,7 +57,7 @@ class FinancialGroup(Base):
     name: Mapped[str]
     description: Mapped[str | None]
     deadline: Mapped[datetime | None]
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
     
     user: Mapped['User'] = relationship(
         'User',
@@ -140,7 +140,7 @@ class BankCard(Base):
     card_number: Mapped[str] = mapped_column(unique=True)
     card_name: Mapped[str | None]
     card_description: Mapped[str | None]
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
 
     user: Mapped['User'] = relationship(
         'User',

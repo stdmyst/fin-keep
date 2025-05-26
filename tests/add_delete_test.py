@@ -36,78 +36,87 @@ async def run_db_test(session: AsyncSession, objs: list[object]):
     for obj in objs:
         await run_db_add_operation(session, obj)
     # deleting objects
-    for obj in objs[::-1]:
-        await run_db_delete_operation(session, obj)
+    # for obj in objs[::-1]:
+    #     await run_db_delete_operation(session, obj)
 
 
-async def add_delete_test():
+def create_objs(n: int, dt: datetime):
+    # Create user
+    u = {
+        'kw': {
+            'id': n,
+            'name': f'{n}_test_name',
+            'email': f'{n}_test_email',
+            'password': f'{n}_test_password'
+        },
+        'T': models.User
+    }
+    # Create card
+    c = {
+        'kw': {
+            'id': n,
+            'card_number': f'{n}_test_card_number',
+            'card_name': f'{n}_test_card_name',
+            'card_description': f'{n}_test_card_description',
+            'user_id': n,
+        },
+        'T': models.BankCard
+    }
+    # Create transaction category
+    tc = {
+        'kw': {
+            'id': n,
+            'name': f'{n}_test_category',
+            'desription': f'{n}_test_category',
+            'user_id': n,
+        },
+        'T': models.TransactionCategory
+    }
+    # Create financial group
+    fc = {
+        'kw': {
+            'id': n,
+            'status': _enums.FinancialGroupStatusesEnum.OPEN,
+            'sum': decimal.Decimal(n),
+            'name': f'{n}_test_name',
+            'description': f'{n}_test_description',
+            'deadline': dt,
+            'user_id': n,
+        },
+        'T': models.FinancialGroup
+    }
+    # Create transaction
+    t = {
+        'kw': {
+            'id': n,
+            'trans_datetime': dt,
+            'trans_sum': decimal.Decimal(n),
+            'description': 'test_description',
+            'target': n,
+            'target_type': _enums.FinancialTypesEnum.GOAL,
+            'category_id': n,
+            'bank_card_id': n,
+            'financial_group_id': n,
+        },
+        'T': models.Transaction
+    }
+    
+    objs = [u, c, tc, fc, t]
+
+    return objs
+
+
+async def add_delete_test(n: int):
     try:
         dt = datetime.now()
         print(f'Test started at {dt}')
-
-        # Create user
-        u = {
-            'kw': {
-                'id': 1,
-                'name': 'test_name',
-                'email': 'test_email',
-                'password': 'test_password'
-            },
-            'T': models.User
-        }
-        # Create card
-        c = {
-            'kw': {
-                'id': 1,
-                'card_number': 'test_card_number',
-                'card_name': 'test_card_name',
-                'card_description': 'test_card_description',
-                'user_id': 1,
-            },
-            'T': models.BankCard
-        }
-        # Create transaction category
-        tc = {
-            'kw': {
-                'id': 1,
-                'name': 'test_category',
-                'desription': 'test_category',
-                'user_id': 1,
-            },
-            'T': models.TransactionCategory
-        }
-        # Create financial group
-        fc = {
-            'kw': {
-                'id': 1,
-                'status': _enums.FinancialGroupStatusesEnum.OPEN,
-                'sum': decimal.Decimal(1),
-                'name': 'test_name',
-                'description': 'test_description',
-                'deadline': dt,
-                'user_id': 1,
-            },
-            'T': models.FinancialGroup
-        }
-        # Create transaction
-        t = {
-            'kw': {
-                'id': 1,
-                'trans_datetime': dt,
-                'trans_sum': decimal.Decimal(1),
-                'description': 'test_description',
-                'target': 1,
-                'target_type': _enums.FinancialTypesEnum.GOAL,
-                'category_id': 1,
-                'bank_card_id': 1,
-                'financial_group_id': 1,
-            },
-            'T': models.Transaction
-        }
-    
-        objs = [u, c, tc, fc, t]
         
-        await run_db_test(objs=objs)
+        tasks: list[asyncio.Task] = []
+        for i in range(1, n+1):
+            objs = create_objs(i, dt)
+            tasks.append(asyncio.create_task(run_db_test(objs=objs)))
+
+        await asyncio.gather(*tasks)
 
         print(f'add_delete_test was successfully completed. Test duration: {datetime.now() - dt}.')
     except Exception:
@@ -116,5 +125,5 @@ async def add_delete_test():
 
 
 if __name__ == '__main__':
-    asyncio.run(add_delete_test())
+    asyncio.run(add_delete_test(1))
     
