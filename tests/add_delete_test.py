@@ -36,8 +36,8 @@ async def run_db_test(session: AsyncSession, objs: list[object]):
     for obj in objs:
         await run_db_add_operation(session, obj)
     # deleting objects
-    # for obj in objs[::-1]:
-    #     await run_db_delete_operation(session, obj)
+    for obj in objs[::-1]:
+        await run_db_delete_operation(session, obj)
 
 
 def create_objs(n: int, dt: datetime):
