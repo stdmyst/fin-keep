@@ -31,7 +31,7 @@ async def run_db_delete_operation(session: AsyncSession, d_obj: dict):
 
 
 @connection.connection
-async def run_db_test(session: AsyncSession, objs: list[object]):
+async def run_db_test(session: AsyncSession, objs: list[dict]):
     # creating objects
     for obj in objs:
         await run_db_add_operation(session, obj)
@@ -109,7 +109,7 @@ def create_objs(n: int, dt: datetime):
 async def add_delete_test(n: int):
     try:
         dt = datetime.now()
-        print(f'Test started at {dt}')
+        print(f'add_delete_test started at {dt}')
         
         tasks: list[asyncio.Task] = []
         for i in range(1, n+1):
@@ -120,10 +120,59 @@ async def add_delete_test(n: int):
 
         print(f'add_delete_test was successfully completed. Test duration: {datetime.now() - dt}.')
     except Exception:
-        print(print(f'add_delete_test failed. Test duration: {datetime.now() - dt}.'))
+        print(f'add_delete_test failed. Test duration: {datetime.now() - dt}.')
         raise
 
 
+async def test_user_fk_on_delete():
+    
+    @connection.connection
+    async def _run_test(session: AsyncSession, objs: dict):
+        # creating objects
+        for obj in objs:
+            await run_db_add_operation(session, obj)
+        
+        u = await session.get(models.User, objs[0].get('kw').get('id'))
+        assert u
+
+        bank_cards = await u.awaitable_attrs.bank_cards
+        assert bank_cards
+        financial_groups = await u.awaitable_attrs.financial_groups
+        assert financial_groups
+        transaction_categories = await u.awaitable_attrs.transaction_categories
+        assert transaction_categories
+
+        # delete user,
+        # it should also trigger cascade delete of related via fk bank_cards, financial groups, transaction categories
+        await session.delete(u)
+        await session.commit()
+        u = await session.get(models.User, objs[0].get('kw').get('id'))
+        assert not u
+
+        for el in [bank_cards, financial_groups, transaction_categories]:
+            obj_t = type(el[0])
+            obj = await session.get(obj_t, el[0].id)
+            assert not obj
+
+
+
+    try:
+        dt = datetime.now()
+        print(f'test_user_fk_on_delete started at {dt}')
+        objs = create_objs(1, dt)
+        
+        await _run_test(objs=objs)
+        print(f'test_user_fk_on_delete was successfully completed. Test duration: {datetime.now() - dt}.')
+    except:
+        print(f'test_user_fk_on_delete failed. Test duration: {datetime.now() - dt}.')
+        raise
+
+
+async def run_all_test():
+    await add_delete_test(104)
+    await test_user_fk_on_delete()
+
+
 if __name__ == '__main__':
-    asyncio.run(add_delete_test(1))
+    asyncio.run(run_all_test())
     
