@@ -10,7 +10,7 @@ import enum
 class FinancialTypesEnum(enum.IntEnum):
     CREDIT = 0
     GOAL = 1
-    TRANSFER = 3
+    TRANSFER = 2
 
 
 class FinancialGroupStatusesEnum(enum.IntEnum):

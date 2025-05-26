@@ -109,7 +109,7 @@ def create_objs(n: int, dt: datetime):
 async def add_delete_test(n: int):
     try:
         dt = datetime.now()
-        print(f'add_delete_test started at {dt}')
+        print(f'[add_delete_test]: started at {dt}')
         
         tasks: list[asyncio.Task] = []
         for i in range(1, n+1):
@@ -118,9 +118,9 @@ async def add_delete_test(n: int):
 
         await asyncio.gather(*tasks)
 
-        print(f'add_delete_test was successfully completed. Test duration: {datetime.now() - dt}.')
+        print(f'[add_delete_test]: was successfully completed. Test duration: {datetime.now() - dt}.')
     except Exception:
-        print(f'add_delete_test failed. Test duration: {datetime.now() - dt}.')
+        print(f'[add_delete_test]: failed. Test duration: {datetime.now() - dt}.')
         raise
 
 
@@ -158,13 +158,13 @@ async def test_user_fk_on_delete():
 
     try:
         dt = datetime.now()
-        print(f'test_user_fk_on_delete started at {dt}')
+        print(f'[test_user_fk_on_delete]: started at {dt}')
         objs = create_objs(1, dt)
         
         await _run_test(objs=objs)
-        print(f'test_user_fk_on_delete was successfully completed. Test duration: {datetime.now() - dt}.')
+        print(f'[test_user_fk_on_delete]: was successfully completed. Test duration: {datetime.now() - dt}.')
     except:
-        print(f'test_user_fk_on_delete failed. Test duration: {datetime.now() - dt}.')
+        print(f'[test_user_fk_on_delete]: failed. Test duration: {datetime.now() - dt}.')
         raise
 
 
