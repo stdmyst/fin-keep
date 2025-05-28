@@ -36,12 +36,14 @@ class TransactionCategory(Base):
 
     user: Mapped['User'] = relationship(
         'User',
-        back_populates='transaction_categories'
+        back_populates='transaction_categories',
+        lazy='selectin'
     )
     transactions: Mapped[list['Transaction'] | None] = relationship(
         'Transaction',
         back_populates='category',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
 
 
@@ -61,20 +63,21 @@ class FinancialGroup(Base):
     
     user: Mapped['User'] = relationship(
         'User',
-        back_populates='financial_groups'
+        back_populates='financial_groups',
+        lazy='selectin'
     )
     transactions: Mapped[list['Transaction'] | None] = relationship(
         'Transaction',
         back_populates='financial_group',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
     
+    """ It must be a calculating fields
     
-""" It must be a calculating field.
-
-    current_sum: Decimal
-    remaining_sum: Decimal
-"""
+        current_sum: Decimal
+        remaining_sum: Decimal
+    """
 
 
 class Transaction(Base):
@@ -94,15 +97,18 @@ class Transaction(Base):
     
     category: Mapped[Optional['TransactionCategory']] = relationship(
         'TransactionCategory',
-        back_populates='transactions'
+        back_populates='transactions',
+        lazy='selectin'
     )
     bank_card: Mapped['BankCard'] = relationship(
         'BankCard',
-        back_populates='transactions'
+        back_populates='transactions',
+        lazy='selectin'
     )
     financial_group: Mapped[Optional['FinancialGroup']] = relationship(
         'FinancialGroup',
-        back_populates='transactions'
+        back_populates='transactions',
+        lazy='selectin'
     )
 
 
@@ -118,17 +124,20 @@ class User(Base):
     bank_cards: Mapped[list['BankCard'] | None] = relationship(
         'BankCard',
         back_populates='user',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
     financial_groups: Mapped[list['FinancialGroup'] | None] = relationship(
         'FinancialGroup',
         back_populates='user',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
     transaction_categories: Mapped[list['TransactionCategory'] | None] = relationship(
         'TransactionCategory',
         back_populates='user',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
 
 
@@ -144,12 +153,14 @@ class BankCard(Base):
     
     user: Mapped['User'] = relationship(
         'User',
-        back_populates='bank_cards'
+        back_populates='bank_cards',
+        lazy='selectin'
     )
     transactions: Mapped[list['Transaction'] | None] = relationship(
         'Transaction',
         back_populates='bank_card',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        lazy='selectin'
     )
 
 
